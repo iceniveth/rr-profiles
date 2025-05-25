@@ -57,7 +57,6 @@ export default function ProfilesEdit({
   loaderData,
   actionData,
 }: Route.ComponentProps) {
-  console.log({ loaderData });
   const [form, fields] = useForm({
     constraint: getZodConstraint(profileSchema),
     lastResult: actionData,
@@ -72,9 +71,7 @@ export default function ProfilesEdit({
     },
   });
   const navigation = useNavigation();
-  const isSubmitting =
-    (navigation.state === "loading" || navigation.state === "submitting") &&
-    navigation.formData?.has("creatingProfile");
+  const isSubmitting = navigation.formData?.has("editingProfile") || false;
 
   return (
     <>
@@ -152,7 +149,7 @@ export default function ProfilesEdit({
             <div>
               <button
                 type="submit"
-                name="creatingProfile"
+                name="editingProfile"
                 disabled={isSubmitting}
                 className="rounded-sm bg-orange-500 px-2 py-1 text-white hover:cursor-pointer"
               >

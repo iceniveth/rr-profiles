@@ -37,9 +37,7 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
     shouldValidate: "onInput",
   });
   const navigation = useNavigation();
-  const isSubmitting =
-    (navigation.state === "loading" || navigation.state === "submitting") &&
-    navigation.formData?.has("creatingProfile");
+  const isSubmitting = navigation.formData?.has("creatingProfile") || false;
 
   return (
     <>
