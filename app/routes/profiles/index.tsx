@@ -50,7 +50,9 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
 
         <ul>
           {loaderData.profiles.map((profile) => (
-            <li key={profile.id}>{profile.name}</li>
+            <li key={profile.id}>
+              <Link to={`/profiles/${profile.id}/edit`}>{profile.name}</Link>
+            </li>
           ))}
         </ul>
       </div>

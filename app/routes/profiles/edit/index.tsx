@@ -1,12 +1,37 @@
-import { getFormProps, getInputProps, useForm } from "@conform-to/react";
-import type { Route } from "./+types";
-import { getZodConstraint, parseWithZod } from "@conform-to/zod";
-import { Form, redirect, useNavigation } from "react-router";
 import { profiles, profileSchema } from "~/lib/profiles";
-import { flashCookie } from "~/lib/cookies/flashCookies";
+import type { Route } from "./+types";
+import { data, Form, redirect, useNavigation } from "react-router";
+import { getFormProps, getInputProps, useForm } from "@conform-to/react";
+import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import ErrorMessage from "~/components/ErrorMessage";
+import { flashCookie } from "~/lib/cookies/flashCookies";
 
-export async function action({ request }: Route.ActionArgs) {
+export async function loader({ params }: Route.LoaderArgs) {
+  const profile = profiles.find((p) => p.id.toString() === params.profileId);
+
+  if (profile == null) {
+    throw new Response(null, {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
+
+  return data({
+    profile,
+  });
+}
+
+export async function action({ request, params }: Route.ActionArgs) {
+  const profileIndex = profiles.findIndex(
+    (p) => p.id.toString() === params.profileId,
+  );
+
+  if (profileIndex === -1) {
+    throw new Response(null, {
+      status: 404,
+      statusText: "Not Found",
+    });
+  }
   const formData = await request.formData();
   const submission = parseWithZod(formData, { schema: profileSchema });
 
@@ -14,11 +39,12 @@ export async function action({ request }: Route.ActionArgs) {
     return submission.reply();
   }
 
-  profiles.push({ id: Date.now(), ...submission.value });
+  const profile = profiles[profileIndex];
+  profiles[profileIndex] = { ...profile, ...submission.value };
 
   const session = await flashCookie.getSession(request.headers.get("Cookie"));
 
-  session.flash("message", "Profile created");
+  session.flash("message", "Profile updated");
 
   return redirect("/profiles", {
     headers: {
@@ -27,7 +53,11 @@ export async function action({ request }: Route.ActionArgs) {
   });
 }
 
-export default function ProfilesNew({ actionData }: Route.ComponentProps) {
+export default function ProfilesEdit({
+  loaderData,
+  actionData,
+}: Route.ComponentProps) {
+  console.log({ loaderData });
   const [form, fields] = useForm({
     constraint: getZodConstraint(profileSchema),
     lastResult: actionData,
@@ -35,6 +65,11 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
       return parseWithZod(formData, { schema: profileSchema });
     },
     shouldValidate: "onInput",
+    defaultValue: {
+      name: loaderData.profile.name,
+      qualities: loaderData.profile.qualities,
+      sex: loaderData.profile.sex,
+    },
   });
   const navigation = useNavigation();
   const isSubmitting =
@@ -46,7 +81,7 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
       <div className="container mx-auto">
         <Form method="post" {...getFormProps(form)}>
           <div className="flex flex-col gap-4">
-            <h2 className="text-lg">Create New Profile</h2>
+            <h2 className="text-lg">Edit Profile</h2>
 
             <div>
               <label>
@@ -121,7 +156,7 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
                 disabled={isSubmitting}
                 className="rounded-sm bg-orange-500 px-2 py-1 text-white hover:cursor-pointer"
               >
-                {isSubmitting ? "Creating" : "Create"}
+                {isSubmitting ? "Updating" : "Update"}
               </button>
             </div>
           </div>
