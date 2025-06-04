@@ -10,3 +10,8 @@ It is assumed here to have knowledge of the Javacript ecosystem
 1. Learn [Conform](https://conform.guide/) for form validation.
    - Progressive enhancement.
    - Integrates well for both frontend and backend.
+
+## Things to do:
+
+- Add input:file in create and edit profile.
+- Ensure that viewing a profile will prefill the input:file.
