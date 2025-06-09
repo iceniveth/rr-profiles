@@ -15,3 +15,5 @@ It is assumed here to have knowledge of the Javacript ecosystem
 
 - Add input:file in create and edit profile.
 - Ensure that viewing a profile will prefill the input:file.
+- Form resetting within the page
+- Filtering by query string
