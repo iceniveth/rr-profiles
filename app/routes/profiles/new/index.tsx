@@ -5,9 +5,29 @@ import { Form, redirect, useNavigation } from "react-router";
 import { profiles, profileSchema } from "~/lib/profiles";
 import { flashCookie } from "~/lib/cookies/flashCookies";
 import ErrorMessage from "~/components/ErrorMessage";
+import { parseFormData, type FileUpload } from "@mjackson/form-data-parser";
+import { fileStorage } from "~/lib/fileStorage";
+
+async function uploadHandler(fileUpload: FileUpload) {
+  if (
+    fileUpload.fieldName === "image" &&
+    fileUpload.type.startsWith("image/")
+  ) {
+    let storageKey = fileUpload.name;
+
+    // FileUpload objects are not meant to stick around for very long (they are
+    // streaming data from the request.body); store them as soon as possible.
+    await fileStorage.set(storageKey, fileUpload);
+
+    // Return a File for the FormData object. This is a LazyFile that knows how
+    // to access the file's content if needed (using e.g. file.stream()) but
+    // waits until it is requested to actually read anything.
+    return fileStorage.get(storageKey);
+  }
+}
 
 export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
+  const formData = await parseFormData(request, uploadHandler);
   const submission = parseWithZod(formData, { schema: profileSchema });
 
   if (submission.status !== "success") {
@@ -42,7 +62,11 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
   return (
     <>
       <div className="container mx-auto">
-        <Form method="post" {...getFormProps(form)}>
+        <Form
+          method="post"
+          encType="multipart/form-data"
+          {...getFormProps(form)}
+        >
           <div className="flex flex-col gap-4">
             <h2 className="text-lg">Create New Profile</h2>
 
