@@ -2,9 +2,17 @@ import { profiles } from "~/lib/profiles";
 import type { Route } from "./+types";
 import { data, Link } from "react-router";
 import { flashCookie } from "~/lib/cookies/flashCookies";
+import QualitiesFilter from "./QualitiesFilter";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await flashCookie.getSession(request.headers.get("Cookie"));
+
+  // how to get the search params from the request
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  const qualities = searchParams.getAll("qualities");
+
+  console.dir({ qualities });
 
   const message = session.get("message");
 
@@ -48,6 +56,7 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
           </div>
         )}
 
+        <QualitiesFilter />
         <ul>
           {loaderData.profiles.map((profile) => (
             <li key={profile.id}>

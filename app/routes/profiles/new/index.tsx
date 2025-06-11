@@ -2,7 +2,7 @@ import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import type { Route } from "./+types";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { Form, redirect, useNavigation } from "react-router";
-import { profiles, profileSchema } from "~/lib/profiles";
+import { profiles, profileSchema, QUALITIES } from "~/lib/profiles";
 import { flashCookie } from "~/lib/cookies/flashCookies";
 import ErrorMessage from "~/components/ErrorMessage";
 import { parseFormData, type FileUpload } from "@mjackson/form-data-parser";
@@ -109,8 +109,8 @@ export default function ProfilesNew({ actionData }: Route.ComponentProps) {
               <fieldset>
                 <label>Qualities</label>
 
-                <div className="flex flex-col gap-2">
-                  {["Confident", "Pretty", "Strong", "Tall"].map((quality) => (
+                <div className="flex flex-wrap gap-2">
+                  {QUALITIES.map((quality) => (
                     <label
                       key={quality}
                       className="rounded border-1 p-1 px-2 hover:cursor-pointer has-checked:border-orange-500 has-checked:text-orange-500"
