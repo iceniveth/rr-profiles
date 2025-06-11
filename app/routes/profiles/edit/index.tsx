@@ -1,4 +1,4 @@
-import { profiles, profileSchema } from "~/lib/profiles";
+import { profiles, profileSchema, QUALITIES } from "~/lib/profiles";
 import type { Route } from "./+types";
 import { data, Form, redirect, useNavigation } from "react-router";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
@@ -119,8 +119,8 @@ export default function ProfilesEdit({
               <fieldset>
                 <label>Qualities</label>
 
-                <div className="flex flex-col gap-2">
-                  {["Confident", "Pretty", "Strong", "Tall"].map((quality) => (
+                <div className="flex flex-wrap gap-2">
+                  {QUALITIES.map((quality) => (
                     <label
                       key={quality}
                       className="rounded border-1 p-1 px-2 hover:cursor-pointer has-checked:border-orange-500 has-checked:text-orange-500"
