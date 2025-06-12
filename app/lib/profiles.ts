@@ -28,7 +28,14 @@ export const QUALITIES = [
 
 export type Quality = (typeof QUALITIES)[number];
 
-export const profiles = [
+export type Profile = {
+  id: number;
+  name: string;
+  sex: "Male" | "Female";
+  qualities: Quality[];
+};
+
+export let profiles: Profile[] = [
   {
     id: 1,
     name: "John Doe",
@@ -237,6 +244,10 @@ export const profiles = [
 
 export const profileSchema = z.object({
   name: z.string().min(1),
-  sex: z.string().min(1),
+  sex: z.enum(["Male", "Female"]),
   qualities: z.array(z.enum(QUALITIES)),
 });
+
+export function deleteProfile(id: number) {
+  profiles = profiles.filter((p) => p.id !== id);
+}

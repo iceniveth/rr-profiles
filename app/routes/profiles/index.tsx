@@ -3,6 +3,7 @@ import type { Route } from "./+types";
 import { data, Link } from "react-router";
 import { flashCookie } from "~/lib/cookies/flashCookies";
 import QualitiesFilter from "./QualitiesFilter";
+import ProfileItem from "./ProfileItem";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await flashCookie.getSession(request.headers.get("Cookie"));
@@ -72,9 +73,7 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
 
         <ul>
           {loaderData.profiles.map((profile) => (
-            <li key={profile.id}>
-              <Link to={`/profiles/${profile.id}/edit`}>{profile.name}</Link>
-            </li>
+            <ProfileItem key={profile.id} profile={profile} />
           ))}
         </ul>
       </div>

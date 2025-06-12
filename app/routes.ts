@@ -5,4 +5,5 @@ export default [
   route("/profiles", "./routes/profiles/index.tsx"),
   route("/profiles/new", "./routes/profiles/new/index.tsx"),
   route("/profiles/:profileId/edit", "./routes/profiles/edit/index.tsx"),
+  route("/profiles/:profileId/delete", "./routes/profiles/delete/index.ts"),
 ] satisfies RouteConfig;
