@@ -1,9 +1,18 @@
 import { profiles } from "~/lib/profiles";
 import type { Route } from "./+types";
-import { data, Link, useFetchers } from "react-router";
+import { data, Form, Link, useFetchers } from "react-router";
 import { flashCookie } from "~/lib/cookies/flashCookies";
 import QualitiesFilter from "./QualitiesFilter";
 import ProfileItem from "./ProfileItem";
+import IsOptimisticCheckBox from "./IsOptimisticCheckBox";
+
+let isOptimisticUI = false;
+
+export async function action({ request }: Route.ActionArgs) {
+  return {
+    isOptimisticUI,
+  };
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   const session = await flashCookie.getSession(request.headers.get("Cookie"));
@@ -56,6 +65,10 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
               New
             </Link>
           </div>
+
+          <div className="grow"></div>
+
+          <IsOptimisticCheckBox />
         </div>
 
         {loaderData.message && (
