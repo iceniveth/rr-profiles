@@ -1,6 +1,6 @@
 import { profiles } from "~/lib/profiles";
 import type { Route } from "./+types";
-import { data, Link } from "react-router";
+import { data, Link, useFetchers } from "react-router";
 import { flashCookie } from "~/lib/cookies/flashCookies";
 import QualitiesFilter from "./QualitiesFilter";
 import ProfileItem from "./ProfileItem";
@@ -36,6 +36,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function Profiles({ loaderData }: Route.ComponentProps) {
+  const fetchers = useFetchers();
+  const deletingProfilesIds = fetchers
+    .map((f) => f.formData?.get("profileId"))
+    .filter((profileId) => profileId != null)
+    .map((profileId) => Number(profileId));
+
   return (
     <>
       <div className="container mx-auto">
@@ -73,7 +79,14 @@ export default function Profiles({ loaderData }: Route.ComponentProps) {
 
         <ul>
           {loaderData.profiles.map((profile) => (
-            <ProfileItem key={profile.id} profile={profile} />
+            <div
+              key={profile.id}
+              className={
+                deletingProfilesIds.includes(profile.id) ? "hidden" : "visible"
+              }
+            >
+              <ProfileItem profile={profile} />
+            </div>
           ))}
         </ul>
       </div>

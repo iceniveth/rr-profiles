@@ -13,8 +13,9 @@ It is assumed here to have knowledge of the Javacript ecosystem
 
 ## Things to do:
 
+- [x] Optimistic delete in profile list with progressive enhancement
+- [x] Toggle filter using query string
 - [ ] Add input:file in create and edit profile.
 - [ ] Ensure that viewing a profile will prefill the input:file.
 - [ ] Form resetting within the page
-- [x] Toggle filter using query string
 - [ ] Dialog but fallbacks to a new page (if no JS)
