@@ -19,3 +19,5 @@ It is assumed here to have knowledge of the Javacript ecosystem
 - [ ] Ensure that viewing a profile will prefill the input:file.
 - [ ] Form resetting within the page
 - [ ] Dialog but fallbacks to a new page (if no JS)
+- [ ] Route for pessimistic UI (loading)
+- [ ] Route for optimistic UI
